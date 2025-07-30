@@ -1,5 +1,8 @@
 import { NgFor, NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+import { API_URL } from 'types/const';
+import { IProduct } from 'types/interface/models';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -104,6 +107,31 @@ export class Home {
     },
   ];
 
+  newProducts = signal<IProduct[]>([]);
+  bestProducts = signal<IProduct[]>([]);
+  constructor(private httpClient: HttpClient) {}
+
+  ngOnInit() {
+    this.httpClient.get(`${API_URL}/product/new`).subscribe({
+      next: (data: any) => {
+        this.newProducts.set(data.data);
+        console.log(this.newProducts());
+      },
+      error: (data: any) => {
+        console.error('HTTP Error: ', data);
+      },
+    });
+    this.httpClient.get(`${API_URL}/product/best`).subscribe({
+      next: (data: any) => {
+        this.bestProducts.set(data.data);
+        console.log(this.bestProducts());
+      },
+      error: (data: any) => {
+        console.error('HTTP Error: ', data);
+      },
+    });
+  }
+
   get filteredProducts() {
     if (this.activeFilter === 'all') {
       return this.products;
@@ -122,4 +150,8 @@ export class Home {
       this.activeFilter === 'all' || product.category === this.activeFilter
     );
   }
+
+  moneyFormat = (price: number) => {
+    return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
+  };
 }

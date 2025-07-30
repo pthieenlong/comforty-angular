@@ -1,5 +1,5 @@
 <header class="font-display">
-  <div id="header-sticky" class="">
+  <div id="header-sticky" [class.header-sticky]="isSticky">
     <div class="top-header bg-secondary">
       <div class="container px-3 md:px-5 xl:px-0">
         <div class="py-3.5 flex justify-center sm:justify-between">
@@ -101,14 +101,25 @@
             </a>
           </div>
           <div class="lg:max-w-[413px] lg:block hidden w-full">
-            <div class="relative">
+            <form
+              class="relative"
+              (ngSubmit)="onSearch()"
+              #searchForm="ngForm"
+              autocomplete="off"
+            >
               <input
                 type="text"
                 id="search"
+                name="search"
+                [(ngModel)]="searchQuery"
                 placeholder="search here..."
                 class="block w-full bg-white focus:outline-none border-0 px-4 py-3 rounded-lg focus:ring-2 ring-[#029FAE]"
               />
-              <label for="search" class="absolute right-4 top-3">
+              <label
+                for="search"
+                class="absolute right-4 top-3"
+                (click)="onSearch()"
+              >
                 <svg
                   width="23"
                   height="22"
@@ -132,15 +143,15 @@
                   />
                 </svg>
               </label>
-            </div>
+            </form>
           </div>
           <div class="lg:block hidden">
             <ul class="flex items-center gap-3">
               <li class="relative">
                 <a
-                  href="#"
                   class="inline-flex gap-2 bg-white rounded-lg p-[11px]"
                   id="addToCart"
+                  (click)="toggleDropdown($event, 'cart')"
                 >
                   <span
                     ><svg
@@ -192,7 +203,11 @@
                     >2</span
                   >
                 </a>
-                <div class="cart-content">
+                <div
+                  class="cart-content"
+                  *ngIf="isCartDropdownOpen"
+                  (click)="$event.stopPropagation()"
+                >
                   <ul class="p-6">
                     <li class="pb-4">
                       <div class="flex items-center justify-between">
@@ -320,6 +335,7 @@
               <li class="relative">
                 <button
                   class="bg-white text-gray-black hover:text-[#007580] rounded-lg p-[11px] user-profile"
+                  (click)="toggleDropdown($event, 'profile')"
                 >
                   <svg
                     width="22"
@@ -348,7 +364,11 @@
                     />
                   </svg>
                 </button>
-                <div class="profile-content">
+                <div
+                  class="profile-content"
+                  *ngIf="isProfileDropdownOpen"
+                  (click)="$event.stopPropagation()"
+                >
                   <ul class="py-3">
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
                       <li>
@@ -402,6 +422,8 @@
           <div class="relative">
             <button
               class="max-h-12 inline-flex items-center justify-center gap-4 py-3.5 px-5 border border-grayscales-700 rounded-md custom-dropdown text-gray-black text-sm leading-4 font-medium font-display"
+              (click)="toggleDropdown($event, 'categories')"
+              tabindex="0"
             >
               <span class="text-gray-black inline-flex">
                 <svg
@@ -418,7 +440,11 @@
               </span>
               <span class="text-gray-black inline-flex">All Categories</span>
             </button>
-            <div class="dropdown-content">
+            <div
+              class="dropdown-content"
+              *ngIf="isCategoriesDropdownOpen"
+              (click)="$event.stopPropagation()"
+            >
               <ul class="p-3">
                 <li>
                   <a href="#">Wodden</a>
