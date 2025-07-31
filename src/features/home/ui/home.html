@@ -659,13 +659,13 @@
         <div class="product-card">
           <a href="product-details.html">
             <div class="product-thumb">
-              <img [src]="product.image" [alt]="product.name" />
-              <span class="badge new" *ngIf="product.isNew">New</span>
+              <img [src]="product.images[0]" [alt]="product.title" />
+              <span class="badge new" >New</span>
             </div>
             <div class="product-info">
               <div>
-                <h2 class="product-name">{{ product.name }}</h2>
-                <h3 class="product-price">${{ product.price }}</h3>
+                <h2 class="product-name">{{ product.title }}</h2>
+                <h3 class="product-price">{{ moneyFormat(product.price) }}</h3>
               </div>
               <div>
                 <button class="cart-icon">

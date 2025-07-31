@@ -4,6 +4,6 @@ export * from './product/product';
 
 export * from './product-detail/product-detail';
 
-export * from './authenticate/login';
-
+export * from './authenticate/component/login';
+export * from './authenticate/component/register';
 export * from './cart/cart';

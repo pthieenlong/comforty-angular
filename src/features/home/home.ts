@@ -109,6 +109,7 @@ export class Home {
 
   newProducts = signal<IProduct[]>([]);
   bestProducts = signal<IProduct[]>([]);
+  allProducts = signal<IProduct[]>([]);
   constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
@@ -124,20 +125,27 @@ export class Home {
     this.httpClient.get(`${API_URL}/product/best`).subscribe({
       next: (data: any) => {
         this.bestProducts.set(data.data);
-        console.log(this.bestProducts());
       },
-      error: (data: any) => {
-        console.error('HTTP Error: ', data);
+      error: (error: any) => {
+        console.error('HTTP Error: ', error);
       },
     });
+    this.httpClient.get(`${API_URL}/product`).subscribe({
+      next: (data: any) => {
+        this.allProducts.set(data.data);
+      },
+      error: (error: any) => {
+        console.error("HTTP Error: ", error)
+      }
+    })
   }
 
   get filteredProducts() {
     if (this.activeFilter === 'all') {
-      return this.products;
+      return this.allProducts();
     }
-    return this.products.filter(
-      (product) => product.category === this.activeFilter
+    return this.allProducts().filter(
+      (product) => product.category[0] === this.activeFilter
     );
   }
 
@@ -145,9 +153,9 @@ export class Home {
     this.activeFilter = category;
   }
 
-  isProductVisible(product: any): boolean {
+  isProductVisible(product: IProduct): boolean {
     return (
-      this.activeFilter === 'all' || product.category === this.activeFilter
+      this.activeFilter === 'all' || product.category[0] === this.activeFilter
     );
   }
 
