@@ -1,102 +1,104 @@
 <header class="font-display">
   <div id="header-sticky" [class.header-sticky]="isSticky">
-    <div class="top-header bg-secondary">
-      <div class="container px-3 md:px-5 xl:px-0">
-        <div class="py-3.5 flex justify-center sm:justify-between">
-          <p
-            class="sm:flex gap-2 items-center text-[13px] leading-[110%] text-white opacity-70 hidden"
-          >
-            <span>
-              <svg
-                width="16"
-                height="17"
-                viewBox="0 0 16 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.3334 4.5L6.00002 11.8333L2.66669 8.5"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-            <span>Miễn phí vận chuyển cho tất cả đơn hàng trên $50</span>
-          </p>
-          <div>
-            <ul class="flex gap-6 items-center">
-              <li
-                class="inline-flex items-center text-white-50 justify-center relative language"
-              >
-                <select class="custom-select" name="state">
-                  <option value="en">Eng</option>
-                  <option value="vi">Viet Nam</option>
-                </select>
-              </li>
-              <li class="inline-flex items-center justify-center">
-                <a
-                  href="#"
-                  class="inline-flex gap-2 items-center text-white opacity-70 text-[13px] leading-[130%]"
-                  >Câu hỏi thường gặp</a
+    @if (auth.isLogined()){
+      <div class="top-header bg-secondary">
+        <div class="container px-3 md:px-5 xl:px-0">
+          <div class="py-3.5 flex justify-center sm:justify-between">
+            <p
+              class="sm:flex gap-2 items-center text-[13px] leading-[110%] text-white opacity-70 hidden"
+            >
+              <span>
+                <svg
+                  width="16"
+                  height="17"
+                  viewBox="0 0 16 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-              </li>
-              <li class="inline-flex items-center justify-center">
-                <a
-                  href="#"
-                  class="inline-flex gap-2 items-center text-white opacity-70 text-[13px] leading-[130%]"
+                  <path
+                    d="M13.3334 4.5L6.00002 11.8333L2.66669 8.5"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span>Miễn phí vận chuyển cho tất cả đơn hàng trên $50</span>
+            </p>
+            <div>
+              <ul class="flex gap-6 items-center">
+                <li
+                  class="inline-flex items-center text-white-50 justify-center relative language"
                 >
-                  <span>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g opacity="0.7" clip-path="url(#clip0_906_1673)">
-                        <path
-                          d="M7.99992 14.6667C11.6818 14.6667 14.6666 11.6819 14.6666 8C14.6666 4.3181 11.6818 1.33333 7.99992 1.33333C4.31802 1.33333 1.33325 4.3181 1.33325 8C1.33325 11.6819 4.31802 14.6667 7.99992 14.6667Z"
-                          stroke="white"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M8 5.33333V8"
-                          stroke="white"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M8 10.6667H8.00615"
-                          stroke="white"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_906_1673">
-                          <rect width="16" height="16" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  </span>
-                  <span>Cần trợ giúp</span>
-                </a>
-              </li>
-            </ul>
+                  <select class="custom-select" name="state">
+                    <option value="en">Eng</option>
+                    <option value="vi">Viet Nam</option>
+                  </select>
+                </li>
+                <li class="inline-flex items-center justify-center">
+                  <a
+                    href="#"
+                    class="inline-flex gap-2 items-center text-white opacity-70 text-[13px] leading-[130%]"
+                    >Câu hỏi thường gặp</a
+                  >
+                </li>
+                <li class="inline-flex items-center justify-center">
+                  <a
+                    href="#"
+                    class="inline-flex gap-2 items-center text-white opacity-70 text-[13px] leading-[130%]"
+                  >
+                    <span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g opacity="0.7" clip-path="url(#clip0_906_1673)">
+                          <path
+                            d="M7.99992 14.6667C11.6818 14.6667 14.6666 11.6819 14.6666 8C14.6666 4.3181 11.6818 1.33333 7.99992 1.33333C4.31802 1.33333 1.33325 4.3181 1.33325 8C1.33325 11.6819 4.31802 14.6667 7.99992 14.6667Z"
+                            stroke="white"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M8 5.33333V8"
+                            stroke="white"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M8 10.6667H8.00615"
+                            stroke="white"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_906_1673">
+                            <rect width="16" height="16" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </span>
+                    <span>Cần trợ giúp</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    }
     <div
       class="main-header bg-grayscales-500 lg:border-none border-b border-grayscales-700"
     >
       <div class="container px-3 md:px-5 xl:px-0">
         <div class="flex justify-between items-center py-5">
           <div>
-            <a href="index.html">
+            <a href="/">
               <img src="assets/images/all-img/logo.png" alt="" />
             </a>
           </div>
@@ -372,10 +374,10 @@
                   <ul class="py-3">
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
                       <li>
-                        <a href="sign-in.html">Đăng nhập</a>
+                        <a href="/login">Đăng nhập</a>
                       </li>
                       <li>
-                        <a href="sign-up.html">Tạo tài khoản</a>
+                        <a href="/register">Tạo tài khoản</a>
                       </li>
                     </div>
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
@@ -391,7 +393,7 @@
                         <a href="wishlist.html">Danh sách yêu thích</a>
                       </li>
                       <li>
-                        <a href="shopping-cart.html">Giỏ hàng</a>
+                        <a href="/cart">Giỏ hàng</a>
                       </li>
                     </div>
                     <div class="px-3">

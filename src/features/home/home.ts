@@ -6,7 +6,7 @@ import { IProduct } from 'types/interface/models';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor],
   templateUrl: './ui/home.html',
   styleUrls: ['./ui/home.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -40,72 +40,6 @@ export class Home {
   ];
 
   activeFilter = 'all';
-  products = [
-    {
-      id: 1,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-01.png',
-      category: 'featured',
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-02.png',
-      category: 'trending',
-      isNew: true,
-    },
-    {
-      id: 3,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-03.png',
-      category: 'featured',
-      isNew: true,
-    },
-    {
-      id: 4,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-04.png',
-      category: 'best-sellers',
-      isNew: true,
-    },
-    {
-      id: 5,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-04.png',
-      category: 'trending',
-      isNew: true,
-    },
-    {
-      id: 6,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-03.png',
-      category: 'trending',
-      isNew: true,
-    },
-    {
-      id: 7,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-02.png',
-      category: 'best-sellers',
-      isNew: true,
-    },
-    {
-      id: 8,
-      name: 'Library Stool Chair',
-      price: 20,
-      image: './assets/images/all-img/f-product-01.png',
-      category: 'newest',
-      isNew: true,
-    },
-  ];
 
   newProducts = signal<IProduct[]>([]);
   bestProducts = signal<IProduct[]>([]);
@@ -116,7 +50,6 @@ export class Home {
     this.httpClient.get(`${API_URL}/product/new`).subscribe({
       next: (data: any) => {
         this.newProducts.set(data.data);
-        console.log(this.newProducts());
       },
       error: (data: any) => {
         console.error('HTTP Error: ', data);

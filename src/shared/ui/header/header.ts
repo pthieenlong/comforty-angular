@@ -1,6 +1,8 @@
 import { NgIf } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'features/authenticate/service/auth';
+
 @Component({
   selector: 'app-header',
   imports: [NgIf, FormsModule],
@@ -14,6 +16,9 @@ export class Header {
   isProfileDropdownOpen = false;
 
   isSticky = false;
+
+  constructor(public auth: AuthService) {
+  }
 
   toggleDropdown(event: MouseEvent, type: 'categories' | 'cart' | 'profile') {
     event.stopPropagation();
