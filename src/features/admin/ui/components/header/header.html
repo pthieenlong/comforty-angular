@@ -1,0 +1,150 @@
+<header class="admin-header">
+  <div class="header-container">
+    <!-- Left: Sidebar toggle + Logo (mobile) -->
+    <div class="header-left">
+      <button
+        class="mobile-menu-toggle lg:hidden"
+        (click)="toggleSidebar()"
+        aria-label="Toggle sidebar"
+      >
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+          <rect y="4" width="24" height="2" rx="1" fill="#374151" />
+          <rect y="11" width="24" height="2" rx="1" fill="#374151" />
+          <rect y="18" width="24" height="2" rx="1" fill="#374151" />
+        </svg>
+      </button>
+      <a class="mobile-logo lg:hidden" routerLink="/admin/dashboard">
+        <img
+          src="assets/images/all-img/logo-sm.png"
+          alt="Logo"
+          width="36"
+          height="36"
+        />
+      </a>
+      <div class="search-container">
+        <form (submit)="onSearch($event)" class="search-input-wrapper">
+          <svg
+            class="search-icon"
+            width="18"
+            height="18"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="7" stroke="#9ca3af" stroke-width="2" />
+            <path
+              d="M20 20L17 17"
+              stroke="#9ca3af"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search…"
+            [(ngModel)]="searchQuery"
+            name="search"
+            autocomplete="off"
+          />
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: User, Notification -->
+    <div class="header-right">
+      <!-- Notification -->
+      <div
+        class="notification-container"
+        (click)="toggleNotifications()"
+        tabindex="0"
+      >
+        <button class="notification-button" aria-label="Notifications">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path
+              d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Zm6-6V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z"
+              stroke="#374151"
+              stroke-width="2"
+            />
+          </svg>
+          <span *ngIf="unreadCount() > 0" class="notification-badge">{{
+            unreadCount()
+          }}</span>
+        </button>
+        <div *ngIf="showNotifications()" class="notification-dropdown">
+          <div class="dropdown-header">
+            <span class="dropdown-title">Notifications</span>
+            <button
+              class="mark-all-read"
+              (click)="markAllAsRead(); $event.stopPropagation()"
+            >
+              Mark all as read
+            </button>
+          </div>
+          <div class="notifications-list">
+            <div
+              *ngFor="let n of notifications()"
+              class="notification-item"
+              [class.unread]="!n.read"
+              (click)="markAsRead(n.id)"
+            >
+              <div class="notification-content">
+                <span class="notification-message">{{ n.message }}</span>
+                <span class="notification-time">{{ n.time }}</span>
+              </div>
+              <span *ngIf="!n.read" class="notification-indicator"></span>
+            </div>
+            <div *ngIf="notifications().length === 0" class="notification-item">
+              <span class="notification-message">No notifications</span>
+            </div>
+          </div>
+          <div class="dropdown-footer">
+            <a class="view-all-link" href="#">View all</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- User -->
+      <div class="user-container" (click)="toggleUserDropdown()" tabindex="0">
+        <button class="user-button" aria-label="User menu">
+          <span class="user-info">
+            <span class="user-name">Admin User</span>
+            <span class="user-role">Administrator</span>
+          </span>
+          <span class="user-avatar">
+            <img src="assets/images/all-img/profile-photo.jpg" alt="User" />
+          </span>
+          <svg
+            class="dropdown-arrow"
+            width="16"
+            height="16"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M6 8l4 4 4-4"
+              stroke="#9ca3af"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div *ngIf="showUserDropdown()" class="user-dropdown">
+          <div class="user-profile">
+            <span class="user-avatar-large">
+              <img src="assets/images/all-img/profile-photo.jpg" alt="User" />
+            </span>
+            <div class="user-details">
+              <span class="user-name-large">Admin User</span>
+              <span class="user-email">admin-example.com</span>
+            </div>
+          </div>
+          <div class="dropdown-menu">
+            <button class="dropdown-item" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

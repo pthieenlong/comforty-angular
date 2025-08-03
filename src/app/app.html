@@ -1,5 +1,9 @@
+@if (layoutService.showClientHeader()) {
 <app-header></app-header>
+}
 <main>
   <router-outlet />
 </main>
+@if (layoutService.showClientFooter()) {
 <app-footer></app-footer>
+}

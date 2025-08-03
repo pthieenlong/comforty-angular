@@ -1,0 +1,77 @@
+/* Admin Bar Styles - WordPress Style */
+.admin-bar {
+  background-color: #23282d !important;
+  color: white !important;
+  border-bottom: 1px solid #32373c;
+  position: relative;
+  z-index: 9999;
+}
+
+.admin-bar .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.admin-bar .admin-link {
+  color: #00a0d2 !important;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-bar .admin-link:hover {
+  background-color: #00a0d2;
+  color: white !important;
+}
+
+.admin-bar .logout-btn {
+  color: #dc3232 !important;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-bar .logout-btn:hover {
+  background-color: #dc3232;
+  color: white !important;
+}
+
+/* Ensure admin bar appears above other elements */
+.admin-bar {
+  position: relative;
+  z-index: 9999;
+}
+
+/* Adjust main header position when admin bar is present */
+.header-with-admin {
+  margin-top: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-bar .container {
+    padding: 0 0.5rem;
+  }
+  
+  .admin-bar .admin-link,
+  .admin-bar .logout-btn {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}

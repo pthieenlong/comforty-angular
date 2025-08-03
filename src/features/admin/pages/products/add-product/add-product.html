@@ -1,0 +1,168 @@
+<div class="add-product-container">
+  <div class="form-header">
+    <h1 class="form-title">Add New Product</h1>
+    <button class="btn-secondary" type="button" (click)="goBack()">
+      Back to Products
+    </button>
+  </div>
+
+  <form class="add-product-form" (ngSubmit)="onSubmit()">
+    <!-- Image Upload & Preview -->
+    <div class="form-group">
+      <label class="form-label">Product Image</label>
+      <div class="image-upload-preview">
+        <img
+          *ngIf="imagePreview() || productForm().image"
+          [src]="imagePreview() || productForm().image"
+          alt="Product Image"
+          class="preview-img"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onImageSelect($event)"
+          class="form-input"
+        />
+      </div>
+    </div>
+
+    <!-- Product Name -->
+    <div class="form-group">
+      <label class="form-label" for="productName">Product Name *</label>
+      <input
+        type="text"
+        id="productName"
+        class="form-input"
+        [(ngModel)]="productForm().name"
+        name="name"
+        required
+        [class.input-error]="hasFieldError('name')"
+        placeholder="Enter product name"
+      />
+      <span class="form-error" *ngIf="hasFieldError('name')">{{
+        getFieldError("name")
+      }}</span>
+    </div>
+
+    <!-- Category -->
+    <div class="form-group">
+      <label class="form-label" for="productCategory">Category *</label>
+      <select
+        id="productCategory"
+        class="form-select"
+        [(ngModel)]="productForm().category"
+        name="category"
+        required
+        [class.input-error]="hasFieldError('category')"
+      >
+        <option value="">Select a category</option>
+        <option *ngFor="let category of categories()" [value]="category.value">
+          {{ category.label }}
+        </option>
+      </select>
+      <span class="form-error" *ngIf="hasFieldError('category')">{{
+        getFieldError("category")
+      }}</span>
+    </div>
+
+    <!-- Price and Stock Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="productPrice">Price *</label>
+        <div class="price-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input
+            type="number"
+            id="productPrice"
+            class="form-input price-input"
+            [(ngModel)]="productForm().price"
+            name="price"
+            required
+            min="0"
+            step="0.01"
+            [class.input-error]="hasFieldError('price')"
+            placeholder="0.00"
+          />
+        </div>
+        <span class="form-error" *ngIf="hasFieldError('price')">{{
+          getFieldError("price")
+        }}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="productStock">Stock *</label>
+        <input
+          type="number"
+          id="productStock"
+          class="form-input"
+          [(ngModel)]="productForm().stock"
+          name="stock"
+          required
+          min="0"
+          [class.input-error]="hasFieldError('stock')"
+          placeholder="0"
+        />
+        <span class="form-error" *ngIf="hasFieldError('stock')">{{
+          getFieldError("stock")
+        }}</span>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="form-group">
+      <label class="form-label" for="productStatus">Status *</label>
+      <select
+        id="productStatus"
+        class="form-select"
+        [(ngModel)]="productForm().status"
+        name="status"
+        required
+      >
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="out-of-stock">Out of Stock</option>
+      </select>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label class="form-label" for="productDescription">Description *</label>
+      <textarea
+        id="productDescription"
+        class="form-textarea"
+        [(ngModel)]="productForm().description"
+        name="description"
+        rows="4"
+        required
+        [class.input-error]="hasFieldError('description')"
+        placeholder="Enter product description..."
+      ></textarea>
+      <span class="form-error" *ngIf="hasFieldError('description')">{{
+        getFieldError("description")
+      }}</span>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="resetForm()">
+        Reset
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+        <svg
+          class="w-4 h-4 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+        {{ isSubmitting() ? "Saving..." : "Add Product" }}
+      </button>
+    </div>
+  </form>
+</div>
