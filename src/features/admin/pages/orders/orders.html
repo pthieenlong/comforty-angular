@@ -1,1 +1,432 @@
-<p>orders works!</p>
+<div class="orders-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Orders Management</h1>
+      <p class="page-subtitle">Track and manage all customer orders</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="toggleFilters()">
+        <svg
+          class="btn-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          ></path>
+        </svg>
+        Filters
+      </button>
+      <button class="btn-primary">
+        <svg
+          class="btn-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          ></path>
+        </svg>
+        Export Orders
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stats-card">
+      <div class="stats-icon stats-icon-blue">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          ></path>
+        </svg>
+      </div>
+      <div class="stats-content">
+        <h3 class="stats-value">{{ orderStats().total }}</h3>
+        <p class="stats-label">Total Orders</p>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-icon stats-icon-green">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+          ></path>
+        </svg>
+      </div>
+      <div class="stats-content">
+        <h3 class="stats-value">{{ formatCurrency(totalRevenue()) }}</h3>
+        <p class="stats-label">Total Revenue</p>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-icon stats-icon-yellow">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+      </div>
+      <div class="stats-content">
+        <h3 class="stats-value">{{ orderStats().pending }}</h3>
+        <p class="stats-label">Pending Orders</p>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-icon stats-icon-purple">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <div class="stats-content">
+        <h3 class="stats-value">{{ orderStats().delivered }}</h3>
+        <p class="stats-label">Delivered Orders</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section" *ngIf="showFilters()">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label class="filter-label">Search Orders</label>
+        <input
+          type="text"
+          class="filter-input"
+          placeholder="Search by customer name, email, or order ID..."
+          [(ngModel)]="searchQuery"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Order Status</label>
+        <select class="filter-select" [(ngModel)]="statusFilter">
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Date Range</label>
+        <select class="filter-select" [(ngModel)]="dateFilter">
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div class="orders-section">
+    <div class="section-header">
+      <h2 class="section-title">Recent Orders</h2>
+      <p class="section-subtitle">
+        Showing {{ filteredOrders().length }} of {{ orders().length }} orders
+      </p>
+    </div>
+
+    <div class="orders-grid">
+      <div *ngFor="let order of filteredOrders()" class="order-card">
+        <!-- Order Header -->
+        <div class="order-header">
+          <div class="order-info">
+            <h3 class="order-id">{{ order.id }}</h3>
+            <p class="order-date">{{ formatDate(order.orderDate) }}</p>
+          </div>
+          <div class="order-status">
+            <span class="status-badge" [class]="getStatusColor(order.status)">
+              {{ order.status | titlecase }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="customer-info">
+          <img
+            [src]="order.customer.avatar"
+            [alt]="order.customer.name"
+            class="customer-avatar"
+          />
+          <div class="customer-details">
+            <h4 class="customer-name">{{ order.customer.name }}</h4>
+            <p class="customer-email">{{ order.customer.email }}</p>
+          </div>
+        </div>
+
+        <!-- Products -->
+        <div class="products-section">
+          <h4 class="products-title">Products ({{ order.products.length }})</h4>
+          <div class="products-list">
+            <div *ngFor="let product of order.products" class="product-item">
+              <img
+                [src]="product.image"
+                [alt]="product.name"
+                class="product-image"
+              />
+              <div class="product-details">
+                <h5 class="product-name">{{ product.name }}</h5>
+                <p class="product-quantity">Qty: {{ product.quantity }}</p>
+                <p class="product-price">{{ formatCurrency(product.price) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <div class="summary-row">
+            <span class="summary-label">Total Amount:</span>
+            <span class="summary-value">{{ formatCurrency(order.total) }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Payment Status:</span>
+            <span
+              class="payment-badge"
+              [class]="getPaymentStatusColor(order.paymentStatus)"
+            >
+              {{ order.paymentStatus | titlecase }}
+            </span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Payment Method:</span>
+            <span class="summary-value">{{ order.paymentMethod }}</span>
+          </div>
+        </div>
+
+        <!-- Order Actions -->
+        <div class="order-actions">
+          <button class="btn-view" (click)="viewOrder(order)">
+            <svg
+              class="btn-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              ></path>
+            </svg>
+            View Details
+          </button>
+
+          <div class="status-actions" *ngIf="order.status === 'pending'">
+            <button
+              class="btn-process"
+              (click)="updateOrderStatus(order.id, 'processing')"
+            >
+              Process Order
+            </button>
+          </div>
+
+          <div class="status-actions" *ngIf="order.status === 'processing'">
+            <button
+              class="btn-ship"
+              (click)="updateOrderStatus(order.id, 'shipped')"
+            >
+              Mark Shipped
+            </button>
+          </div>
+
+          <div class="status-actions" *ngIf="order.status === 'shipped'">
+            <button
+              class="btn-deliver"
+              (click)="updateOrderStatus(order.id, 'delivered')"
+            >
+              Mark Delivered
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredOrders().length === 0" class="empty-state">
+      <svg
+        class="empty-icon"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+        ></path>
+      </svg>
+      <h3 class="empty-title">No orders found</h3>
+      <p class="empty-description">
+        Try adjusting your search or filter criteria
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div *ngIf="showOrderModal()" class="modal-overlay" (click)="closeOrderModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Order Details - {{ selectedOrder()?.id }}</h2>
+      <button class="modal-close" (click)="closeOrderModal()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedOrder()">
+      <!-- Customer Information -->
+      <div class="modal-section">
+        <h3 class="section-title">Customer Information</h3>
+        <div class="customer-detail">
+          <img
+            [src]="selectedOrder()!.customer.avatar"
+            [alt]="selectedOrder()!.customer.name"
+            class="detail-avatar"
+          />
+          <div class="detail-info">
+            <h4>{{ selectedOrder()!.customer.name }}</h4>
+            <p>{{ selectedOrder()!.customer.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Information -->
+      <div class="modal-section">
+        <h3 class="section-title">Order Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Order ID:</span>
+            <span class="info-value">{{ selectedOrder()!.id }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Order Date:</span>
+            <span class="info-value">{{
+              formatDate(selectedOrder()!.orderDate)
+            }}</span>
+          </div>
+          <div class="info-item" *ngIf="selectedOrder()!.deliveryDate">
+            <span class="info-label">Delivery Date:</span>
+            <span class="info-value">{{
+              formatDate(selectedOrder()!.deliveryDate!)
+            }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Status:</span>
+            <span
+              class="status-badge"
+              [class]="getStatusColor(selectedOrder()!.status)"
+            >
+              {{ selectedOrder()!.status | titlecase }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Payment Status:</span>
+            <span
+              class="payment-badge"
+              [class]="getPaymentStatusColor(selectedOrder()!.paymentStatus)"
+            >
+              {{ selectedOrder()!.paymentStatus | titlecase }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Payment Method:</span>
+            <span class="info-value">{{ selectedOrder()!.paymentMethod }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="modal-section">
+        <h3 class="section-title">Shipping Address</h3>
+        <p class="address-text">{{ selectedOrder()!.shippingAddress }}</p>
+      </div>
+
+      <!-- Products -->
+      <div class="modal-section">
+        <h3 class="section-title">Products</h3>
+        <div class="products-detail">
+          <div
+            *ngFor="let product of selectedOrder()!.products"
+            class="product-detail-item"
+          >
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              class="product-detail-image"
+            />
+            <div class="product-detail-info">
+              <h4>{{ product.name }}</h4>
+              <p>Quantity: {{ product.quantity }}</p>
+              <p>Price: {{ formatCurrency(product.price) }}</p>
+              <p class="product-total">
+                Total: {{ formatCurrency(product.price * product.quantity) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Total -->
+      <div class="modal-section">
+        <div class="order-total">
+          <span class="total-label">Order Total:</span>
+          <span class="total-amount">{{
+            formatCurrency(selectedOrder()!.total)
+          }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeOrderModal()">Close</button>
+    </div>
+  </div>
+</div>
