@@ -15,7 +15,16 @@ export interface IProduct {
   updatedAt: Date;
   createdAt: Date;
 }
-
+export interface IShortProduct {
+  id: string;
+  slug: string;
+  title: string;
+  image: string;
+  categories: string[];
+  price: number;
+  isSale: boolean;
+  salePercent: number;
+}
 export interface ICartItem {
   slug: string;
   title: string;

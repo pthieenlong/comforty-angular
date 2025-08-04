@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, inject, signal } from '@angular/core';
 import { CartService } from 'features/cart/cart.service';
 import { API_URL } from 'types/const';
-import { ICartItem, IProduct } from 'types/interface/models';
+import { ICartItem, IProduct, IShortProduct } from 'types/interface/models';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -42,9 +42,9 @@ export class Home {
 
   activeFilter = 'all';
 
-  newProducts = signal<IProduct[]>([]);
-  bestProducts = signal<IProduct[]>([]);
-  allProducts = signal<IProduct[]>([]);
+  newProducts = signal<IShortProduct[]>([]);
+  bestProducts = signal<IShortProduct[]>([]);
+  allProducts = signal<IShortProduct[]>([]);
 
   private cartService = inject(CartService);
   constructor(private httpClient: HttpClient) {}
@@ -81,7 +81,7 @@ export class Home {
       return this.allProducts();
     }
     return this.allProducts().filter(
-      (product) => product.category[0] === this.activeFilter
+      (product) => product.categories[0] === this.activeFilter
     );
   }
 
@@ -89,9 +89,9 @@ export class Home {
     this.activeFilter = category;
   }
 
-  isProductVisible(product: IProduct): boolean {
+  isProductVisible(product: IShortProduct): boolean {
     return (
-      this.activeFilter === 'all' || product.category[0] === this.activeFilter
+      this.activeFilter === 'all' || product.categories[0] === this.activeFilter
     );
   }
 
@@ -99,14 +99,14 @@ export class Home {
     return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
   };
 
-  addToCart(product: IProduct) {
+  addToCart(product: IShortProduct) {
     const cartItem: ICartItem = { 
       ...product, 
       quantity: 1, 
       inStock: true, 
       originalPrice: product.price, 
       price: product.isSale ? (product.price - product.price * product.salePercent) : product.price ,
-      image: product.images[0]
+      image: product.image
     }
     this.cartService.addToCart(cartItem);
   }

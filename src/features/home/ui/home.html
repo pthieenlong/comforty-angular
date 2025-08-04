@@ -375,7 +375,7 @@
           <div class="product-card">
             <div>
               <a href="/product/{{ product.slug }}" class="product-thumb">
-                <img src="{{ product.images[0] }}" alt="{{ product.slug }}" />
+                <img src="{{ product.image }}" alt="{{ product.slug }}" />
                 <span class="badge new">New</span>
               </a>
               <div class="product-info">
@@ -523,7 +523,7 @@
       <swiper-slide>
         <div class="product-card-02">
           <div class="product-thumb">
-            <a href="products.html"
+            <a href="products"
               ><img src="./assets/images/all-img/t-product-01.png" alt=""
             /></a>
           </div>
@@ -537,7 +537,7 @@
       <swiper-slide>
         <div class="product-card-02">
           <div class="product-thumb">
-            <a href="products.html"
+            <a href="products"
               ><img src="./assets/images/all-img/t-product-02.png" alt=""
             /></a>
           </div>
@@ -551,7 +551,7 @@
       <swiper-slide>
         <div class="product-card-02">
           <div class="product-thumb">
-            <a href="products.html"
+            <a href="products"
               ><img src="./assets/images/all-img/t-product-03.png" alt=""
             /></a>
           </div>
@@ -565,7 +565,7 @@
       <swiper-slide>
         <div class="product-card-02">
           <div class="product-thumb">
-            <a href="products.html"
+            <a href="products"
               ><img src="./assets/images/all-img/t-product-02.png" alt=""
             /></a>
           </div>
@@ -579,7 +579,7 @@
       <swiper-slide>
         <div class="product-card-02">
           <div class="product-thumb">
-            <a href="products.html"
+            <a href="products"
               ><img src="./assets/images/all-img/t-product-03.png" alt=""
             /></a>
           </div>
@@ -657,9 +657,9 @@
         [class.hidden]="!isProductVisible(product)"
       >
         <div class="product-card">
-          <a href="product-details.html">
+          <a href="product/{{ product.slug }}">
             <div class="product-thumb">
-              <img [src]="product.images[0]" [alt]="product.title" />
+              <img [src]="product.image" [alt]="product.title" />
               <span class="badge new" >New</span>
             </div>
             <div class="product-info">
@@ -1078,7 +1078,7 @@
         <div class="product-card">
           <a href="product/{{ item.slug }}">
             <div class="product-thumb">
-              <img src="{{ item.images[0] }}" alt="{{ item.slug }}" />
+              <img src="{{ item.image }}" alt="{{ item.slug }}" />
               <span class="badge new">New</span>
             </div>
             <div class="product-info">
