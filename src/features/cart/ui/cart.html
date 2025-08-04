@@ -66,193 +66,72 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="cart-item">
-                <td class="py-6 text-sm">
-                  <div class="flex gap-2 items-center">
-                    <button class="del">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M2 2L6.00003 6M6.00003 6L10 2M6.00003 6L2 10M6.00003 6L10 10"
-                          stroke="#9A9CAA"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+              @for (cartItem of getCart(); track $index) {
+                <tr class="cart-item">
+                  <td class="py-6 text-sm">
+                    <div class="flex gap-2 items-center">
+                      <button class="del">
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M2 2L6.00003 6M6.00003 6L10 2M6.00003 6L2 10M6.00003 6L10 10"
+                            stroke="#9A9CAA"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                      <a href="product/{{ cartItem.slug }}" class="w-[70px] h-[70px]">
+                        <img
+                          class="w-full h-full rounded-lg"
+                          src="{{ cartItem.image }}"
+                          alt=""
                         />
-                      </svg>
-                    </button>
-
-                    <div class="w-[70px] h-[70px]">
-                      <img
-                        class="w-full h-full rounded-lg"
-                        src="./assets/images/all-img/shopping-cart-01.png"
-                        alt=""
-                      />
+                      </a>
+                      <div class="ml-1">
+                        <a href="product/{{ cartItem.slug }}" class="mb-0 text-[#272343] text-sm">
+                          {{ cartItem.title }}
+                        </a>
+                      </div>
                     </div>
-                    <div class="ml-1">
-                      <p class="mb-0 text-[#272343] text-sm">
-                        Sofa for Living Room
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td class="py-6 text-sm">
-                  <p class="mb-0">$250.00</p>
-                </td>
-                <td class="py-6 text-sm">
-                  <div
-                    class="border inline-flex justify-around items-center h-[52px] w-[140px] border-[#D6D9DD] rounded-lg"
-                  >
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pl-[14px] select-none minus"
-                      id="minus"
-                      >-</span
+                  </td>
+                  <td class="py-6 text-sm">
+                    <p class="mb-0">{{ moneyFormat(cartItem.price)}}</p>
+                  </td>
+                  <td class="py-6 text-sm">
+                    <div
+                      class="border inline-flex justify-around items-center h-[52px] w-[140px] border-[#D6D9DD] rounded-lg"
                     >
-                    <input
-                      type="text"
-                      class="text-[#272343] text-base plus_mines_input select-none"
-                      value="01"
-                    />
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pr-[14px] select-none plus"
-                      id="plus"
-                      >+</span
-                    >
-                  </div>
-                </td>
-                <td class="py-6 text-sm">
-                  <p>$250.00</p>
-                </td>
-              </tr>
-              <tr class="cart-item">
-                <td class="pb-6 text-sm">
-                  <div class="flex gap-2 items-center">
-                    <button class="del">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pl-[14px] select-none minus"
+                        id="minus"
+                        (click)="decrease(cartItem)"
+                        >-</span
                       >
-                        <path
-                          d="M2 2L6.00003 6M6.00003 6L10 2M6.00003 6L2 10M6.00003 6L10 10"
-                          stroke="#9A9CAA"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    <div class="w-[70px] h-[70px]">
-                      <img
-                        class="w-full h-full rounded-lg"
-                        src="./assets/images/all-img/shopping-cart-01.png"
-                        alt=""
+                      <input
+                        type="number"
+                        class="text-[#272343] text-base plus_mines_input select-none"
+                        value="{{ cartItem.quantity }}"
                       />
-                    </div>
-                    <div class="ml-1">
-                      <p class="mb-0 text-[#272343] text-sm">
-                        Sofa for Living Room
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td class="pb-6 text-sm">
-                  <p class="mb-0">$250.00</p>
-                </td>
-                <td class="pb-6 text-sm">
-                  <div
-                    class="border inline-flex justify-around items-center h-[52px] w-[140px] border-[#D6D9DD] rounded-lg"
-                  >
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pl-[14px] select-none minus"
-                      id="minus"
-                      >-</span
-                    >
-                    <input
-                      type="text"
-                      class="text-[#272343] text-base plus_mines_input"
-                      value="01"
-                    />
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pr-[14px] select-none plus"
-                      id="plus"
-                      >+</span
-                    >
-                  </div>
-                </td>
-                <td class="pb-6 text-sm">
-                  <p>$250.00</p>
-                </td>
-              </tr>
-              <tr class="cart-item">
-                <td class="pb-6 text-sm">
-                  <div class="flex gap-2 items-center">
-                    <button class="del">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pr-[14px] select-none plus"
+                        id="plus"
+                        (click)="increase(cartItem)"
+                        >+</span
                       >
-                        <path
-                          d="M2 2L6.00003 6M6.00003 6L10 2M6.00003 6L2 10M6.00003 6L10 10"
-                          stroke="#9A9CAA"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    <div class="w-[70px] h-[70px]">
-                      <img
-                        class="w-full h-full rounded-lg"
-                        src="./assets/images/all-img/shopping-cart-01.png"
-                        alt=""
-                      />
                     </div>
-                    <div class="ml-1">
-                      <p class="mb-0 text-[#272343] text-sm">
-                        Sofa for Living Room
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td class="pb-6 text-sm">
-                  <p class="mb-0">$250.00</p>
-                </td>
-                <td class="pb-6 text-sm">
-                  <div
-                    class="border inline-flex justify-around items-center h-[52px] w-[140px] border-[#D6D9DD] rounded-lg"
-                  >
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pl-[14px] select-none minus"
-                      id="minus"
-                      >-</span
-                    >
-                    <input
-                      type="text"
-                      class="text-[#272343] text-base plus_mines_input"
-                      value="01"
-                    />
-                    <span
-                      class="w-5 h-5 inline-flex justify-center items-center text-[#9A9CAA] pr-[14px] select-none plus"
-                      id="plus"
-                      >+</span
-                    >
-                  </div>
-                </td>
-                <td class="pb-6 text-sm">
-                  <p>$250.00</p>
-                </td>
-              </tr>
+                  </td>
+                  <td class="py-6 text-sm">
+                    <p>{{ moneyFormat( cartItem.price * cartItem.quantity )}}</p>
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -288,7 +167,7 @@
             <p
               class="text-gray-black text-[16px] leading-[120%] font-display font-medium"
             >
-              $1,435.00
+              {{ moneyFormat(total()) }}
             </p>
           </div>
           <div class="flex justify-between items-center pt-4">
@@ -313,7 +192,7 @@
             <p
               class="text-gray-black text-[22px] leading-[120%] font-display font-semibold"
             >
-              $1026.23
+              {{ moneyFormat(total())}}
             </p>
           </div>
           <button

@@ -373,20 +373,20 @@
         @for (product of bestProducts(); track $index) {
         <swiper-slide class="swiper-slide mr-6">
           <div class="product-card">
-            <a href="/product/{{ product.slug }}">
-              <div class="product-thumb">
+            <div>
+              <a href="/product/{{ product.slug }}" class="product-thumb">
                 <img src="{{ product.images[0] }}" alt="{{ product.slug }}" />
                 <span class="badge new">New</span>
-              </div>
+              </a>
               <div class="product-info">
                 <div>
-                  <h2 class="product-name">{{ product.title }}</h2>
+                  <a href="/product/{{ product.slug }}" class="product-name">{{ product.title }}</a>
                   <h3 class="product-price">
                     {{ moneyFormat(product.price) }}
                   </h3>
                 </div>
                 <div>
-                  <button class="cart-icon">
+                  <button class="cart-icon" (click)="addToCart(product)">
                     <svg
                       width="22"
                       height="22"
@@ -432,7 +432,7 @@
                   </button>
                 </div>
               </div>
-            </a>
+            </div>
             <a href="wishlist.html" class="heart-icon">
               <svg
                 width="22"

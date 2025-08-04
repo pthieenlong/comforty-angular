@@ -1,7 +1,8 @@
-import { JsonPipe, NgIf } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from 'features/authenticate/service/auth';
+import { CartService } from 'features/cart/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -14,11 +15,10 @@ export class Header {
   isCategoriesDropdownOpen = false;
   isCartDropdownOpen = false;
   isProfileDropdownOpen = false;
-
   isSticky = false;
-
+  private cartService = inject(CartService);
+  public cart = this.cartService.cart();
   constructor(public auth: AuthService) {}
-
   toggleDropdown(event: MouseEvent, type: 'categories' | 'cart' | 'profile') {
     event.stopPropagation();
     this.isCategoriesDropdownOpen =
@@ -43,5 +43,15 @@ export class Header {
 
   onSearch() {
     console.log('Searching: ', this.searchQuery);
+  }
+  moneyFormat = (price: number) => {
+    return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
+  };
+
+  getCartTotal() {
+    return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+  getCartTotalQuantity() {
+    return this.cart.reduce((sum, item) => sum + item.quantity, 0)
   }
 }

@@ -15,3 +15,20 @@ export interface IProduct {
   updatedAt: Date;
   createdAt: Date;
 }
+
+export interface ICartItem {
+  slug: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  quantity: number;
+  inStock: boolean;
+}
+export interface ICart {
+  items: ICartItem[];
+  totalItems: number;
+  subtotal: number;
+  discount: number;
+  total: number;
+}

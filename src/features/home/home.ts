@@ -1,8 +1,9 @@
 import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, inject, signal } from '@angular/core';
+import { CartService } from 'features/cart/cart.service';
 import { API_URL } from 'types/const';
-import { IProduct } from 'types/interface/models';
+import { ICartItem, IProduct } from 'types/interface/models';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -44,6 +45,8 @@ export class Home {
   newProducts = signal<IProduct[]>([]);
   bestProducts = signal<IProduct[]>([]);
   allProducts = signal<IProduct[]>([]);
+
+  private cartService = inject(CartService);
   constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
@@ -95,4 +98,16 @@ export class Home {
   moneyFormat = (price: number) => {
     return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
   };
+
+  addToCart(product: IProduct) {
+    const cartItem: ICartItem = { 
+      ...product, 
+      quantity: 1, 
+      inStock: true, 
+      originalPrice: product.price, 
+      price: product.isSale ? (product.price - product.price * product.salePercent) : product.price ,
+      image: product.images[0]
+    }
+    this.cartService.addToCart(cartItem);
+  }
 }
