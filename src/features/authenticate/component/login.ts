@@ -28,15 +28,11 @@ export class Login {
       .post(`${API_URL}/auth/login`, { ...formData, withCredential: true })
       .subscribe({
         next: (res: any) => {
-          console.log('Login response:', res);
           this.authService.login(res.data);
 
-          // Check if user is admin and redirect accordingly
           if (this.authService.isAdmin()) {
-            console.log('User is admin, redirecting to admin dashboard');
             this.router.navigate(['/admin']);
           } else {
-            console.log('User is not admin, redirecting to home');
             this.router.navigate(['/']);
           }
         },

@@ -24,13 +24,15 @@ export class Cart {
     this.cartService.updateQuantity(item.slug, item.quantity - 1);
   }
   total() {
-    return this.cart().reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return this.cart().reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
   }
   public getCart() {
     return this.cartService.getCart();
   }
   public moneyFormat(price: number) {
     return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
-
   }
 }

@@ -158,6 +158,7 @@
             <div class="xl:w-[343px] add-to-cart-btn">
               <button
                 class="inline-flex gap-3 py-3.5 bg-[#029FAE] hover:bg-[#272343] transition-all duration-300 rounded-lg px-4 xl:w-[343px] w-full items-center justify-center"
+                (click)="addToCart(product() ? product() : undefined)"
               >
                 <span class="text-white text-base">
                   <svg

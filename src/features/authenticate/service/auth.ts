@@ -11,9 +11,6 @@ export class AuthService {
   readonly user = computed(() => this._user());
   readonly isAdmin = computed(() => {
     const user = this._user();
-    console.log('Checking admin - User:', user);
-    console.log('User roles:', user?.roles);
-    console.log('First role:', user?.roles?.[0]);
     return user?.roles?.[0] === 'ADMIN';
   });
 
@@ -55,13 +52,8 @@ export class AuthService {
     this._isLogined.set(true);
     this._user.set(user);
 
-    // Persist to localStorage
     this.setStoredLoginState(true);
     this.setStoredUser(user);
-
-    console.log('After login - isLogined:', this._isLogined());
-    console.log('After login - user:', this._user());
-    console.log('After login - isAdmin:', this.isAdmin());
   }
 
   logout() {
@@ -81,7 +73,6 @@ export class AuthService {
     }
   }
 
-  // Method to check if user is still valid (optional)
   checkAuthStatus(): boolean {
     const isLogined = this.getStoredLoginState();
     const user = this.getStoredUser();
@@ -94,5 +85,9 @@ export class AuthService {
       this.logout();
       return false;
     }
+  }
+
+  getUser() {
+    return this.getStoredUser();
   }
 }

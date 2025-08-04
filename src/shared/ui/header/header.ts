@@ -52,6 +52,10 @@ export class Header {
     return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
   getCartTotalQuantity() {
-    return this.cart.reduce((sum, item) => sum + item.quantity, 0)
+    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  onUserLogin() {
+    this.cartService.syncCartToServer();
   }
 }

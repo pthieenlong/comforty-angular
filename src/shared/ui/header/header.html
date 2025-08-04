@@ -261,7 +261,8 @@
                   <span>Giỏ hàng</span>
                   <span
                     class="bg-dark-accents text-white rounded-full py-[3px] px-[9px] ml-1 inline-flex justify-center items-center text-[10px] leading-[100%]"
-                    > {{ getCartTotalQuantity() }}</span
+                  >
+                    {{ getCartTotalQuantity() }}</span
                   >
                 </a>
                 <div
@@ -271,65 +272,72 @@
                 >
                   <ul class="p-6">
                     @for (cartItem of cart.slice(0, 2); track $index) {
-                      <li class="pb-4">
-                        <a href="product/{{cartItem.slug}}" class="flex items-center justify-between">
-                          <div class="flex items-center gap-1 pt-3">
-                            <div class="max-w-20">
-                              <img
-                                src="{{ cartItem.image }}"
-                                alt=""
-                                class="w-full"
-                              />
-                            </div>
-                            <div class="px-2">
-                              <h2 class="text-gray-black">
-                                <span>{{ cartItem.title}}</span>
-                                <span class="text-[#636270]">x{{cartItem.quantity}}</span>
-                              </h2>
-                              <p class="text-gray-black font-semibold mb-0">
-                                {{ moneyFormat(cartItem.price * cartItem.quantity) }}
-                              </p>
-                            </div>
+                    <li class="py-4">
+                      <a
+                        href="product/{{ cartItem.slug }}"
+                        class="flex items-center justify-between"
+                      >
+                        <div class="flex items-center gap-1">
+                          <div style="max-width: 80px">
+                            <img
+                              src="{{ cartItem.image }}"
+                              alt=""
+                              class="w-full"
+                            />
                           </div>
-                          <div>
-                            <button
-                              class="hover:bg-[#F0F2F3] bg-transparent p-2 hover:text-gray-black rounded-full text-[#9A9CAA] transition-all duration-500"
-                            >
-                              <svg
-                                width="28"
-                                height="28"
-                                viewBox="0 0 28 28"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                          <div class="px-2">
+                            <h2 class="text-gray-black">
+                              <span>{{ cartItem.title }}</span>
+                              <span class="text-[#636270]"
+                                >x{{ cartItem.quantity }}</span
                               >
-                                <path
-                                  d="M10 10L14 14M14 14L18 10M14 14L10 18M14 14L18 18"
-                                  stroke="currentColor"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                            </button>
+                            </h2>
+                            <p class="text-gray-black font-semibold mb-0">
+                              {{
+                                moneyFormat(cartItem.price * cartItem.quantity)
+                              }}
+                            </p>
                           </div>
-                        </a>
-                      </li>
+                        </div>
+                        <div>
+                          <button
+                            class="hover:bg-[#F0F2F3] bg-transparent p-2 hover:text-gray-black rounded-full text-[#9A9CAA] transition-all duration-500"
+                          >
+                            <svg
+                              width="28"
+                              height="28"
+                              viewBox="0 0 28 28"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10 10L14 14M14 14L18 10M14 14L10 18M14 14L18 18"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </a>
+                    </li>
                     }
-                   
-                   
+
                     <div class="flex justify-between items-center py-2 mb-4">
-                      <p class="text-[#636270] text-lg">{{ getCartTotalQuantity() }} Sản phẩm</p>
-                      <p class="text-gray-black text-xl font-medium">{{ moneyFormat(getCartTotal())}}</p>
+                      <p class="text-[#636270] text-lg">
+                        {{ getCartTotalQuantity() }} Sản phẩm
+                      </p>
+                      <p class="text-gray-black text-xl font-medium">
+                        {{ moneyFormat(getCartTotal()) }}
+                      </p>
                     </div>
                     <div class="flex justify-between items-center">
-                      <a href="/cart" class="btn-transparent"
-                        >Xem giỏ hàng</a
-                      >
+                      <a href="/cart" class="btn-transparent">Xem giỏ hàng</a>
                       <a href="#" class="btn-primary"
                         >Thanh toán
                         <!-- checkout -->
-                        </a
-                      >
+                      </a>
                     </div>
                   </ul>
                 </div>
@@ -396,6 +404,7 @@
                   (click)="$event.stopPropagation()"
                 >
                   <ul class="py-3">
+                    @if(!auth.isLogined()) {
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
                       <li>
                         <a href="/login">Đăng nhập</a>
@@ -404,17 +413,18 @@
                         <a href="/register">Tạo tài khoản</a>
                       </li>
                     </div>
+                    } @else {
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
                       <li>
-                        <a href="account-setting.html">Cài đặt tài khoản</a>
+                        <a href="/user">Cài đặt tài khoản</a>
                       </li>
                       <li>
-                        <a href="order-history.html">Lịch sử đơn hàng</a>
+                        <a href="/user/orders">Lịch sử đơn hàng</a>
                       </li>
                     </div>
                     <div class="px-3 shadow-[0px_1px_0px_#E1E3E6]">
                       <li>
-                        <a href="wishlist.html">Danh sách yêu thích</a>
+                        <a href="/wishlist">Danh sách yêu thích</a>
                       </li>
                       <li>
                         <a href="/cart">Giỏ hàng</a>
@@ -422,9 +432,10 @@
                     </div>
                     <div class="px-3">
                       <li>
-                        <a href="#">Đăng xuất</a>
+                        <a href="#" (click)="auth.logout()">Đăng xuất</a>
                       </li>
                     </div>
+                    }
                   </ul>
                 </div>
               </li>
@@ -490,61 +501,10 @@
 
           <ul class="lg:flex gap-8 items-center hidden main-menu">
             <li>
-              <a href="index.html">Trang chủ</a>
+              <a href="/">Trang chủ</a>
             </li>
             <li>
-              <a href="products.html">Cửa hàng</a>
-            </li>
-            <li>
-              <a href="product-details.html">Sản phẩm</a>
-            </li>
-            <li class="relative">
-              <a
-                href="javascript:void(0);"
-                class="inline-flex gap-2 items-center"
-                >Trang
-                <span>
-                  <img src="./assets/images/all-img/select-arrow.png" alt="" />
-                </span>
-              </a>
-              <ul>
-                <li>
-                  <a href="404.html">404</a>
-                </li>
-                <li>
-                  <a href="account-setting.html">Cài đặt tài khoản</a>
-                </li>
-                <li>
-                  <a href="sign-in.html">Đăng nhập</a>
-                </li>
-                <li>
-                  <a href="sign-up.html">Đăng ký</a>
-                </li>
-                <li>
-                  <a href="forget-password.html">Quên mật khẩu</a>
-                </li>
-                <li>
-                  <a href="change-password.html">Đổi mật khẩu</a>
-                </li>
-                <li>
-                  <a href="products.html">Danh sách sản phẩm</a>
-                </li>
-                <li>
-                  <a href="product-details.html">Chi tiết sản phẩm</a>
-                </li>
-                <li>
-                  <a href="shopping-cart.html">Giỏ hàng</a>
-                </li>
-                <li>
-                  <a href="wishlist.html">Danh sách yêu thích</a>
-                </li>
-                <li>
-                  <a href="checkout-billing.html">Thanh toán hóa đơn</a>
-                </li>
-                <li>
-                  <a href="checkout-shopping.html">Thanh toán mua sắm</a>
-                </li>
-              </ul>
+              <a href="/products">Cửa hàng</a>
             </li>
             <li>
               <a href="">Giới thiệu</a>
