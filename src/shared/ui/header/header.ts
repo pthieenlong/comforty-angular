@@ -17,7 +17,7 @@ export class Header {
   isProfileDropdownOpen = false;
   isSticky = false;
   private cartService = inject(CartService);
-  public cart = this.cartService.cart();
+  public cart = this.cartService.cart;
   constructor(public auth: AuthService) {}
   toggleDropdown(event: MouseEvent, type: 'categories' | 'cart' | 'profile') {
     event.stopPropagation();
@@ -49,13 +49,17 @@ export class Header {
   };
 
   getCartTotal() {
-    return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return this.cart().reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
   getCartTotalQuantity() {
-    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+    return this.cart().reduce((sum, item) => sum + item.quantity, 0);
   }
 
   onUserLogin() {
     this.cartService.syncCartToServer();
+  }
+  onUserLogout() {
+    this.auth.logout();
+    this.cartService.clearCart();
   }
 }

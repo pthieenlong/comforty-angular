@@ -271,7 +271,7 @@
                   (click)="$event.stopPropagation()"
                 >
                   <ul class="p-6">
-                    @for (cartItem of cart.slice(0, 2); track $index) {
+                    @for (cartItem of cart().slice(0, 2); track $index) {
                     <li class="py-4">
                       <a
                         href="product/{{ cartItem.slug }}"
@@ -432,7 +432,7 @@
                     </div>
                     <div class="px-3">
                       <li>
-                        <a href="#" (click)="auth.logout()">Đăng xuất</a>
+                        <a href="#" (click)="onUserLogout()">Đăng xuất</a>
                       </li>
                     </div>
                     }

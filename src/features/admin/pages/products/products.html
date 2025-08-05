@@ -185,7 +185,7 @@
       </div>
       <div class="stats-content">
         <h3 class="stats-value">
-          {{ outOfStockProducts() }}
+          {{ 0 }}
         </h3>
         <p class="stats-label">Out of Stock</p>
       </div>
@@ -209,9 +209,9 @@
       </div>
       <div class="stats-content">
         <h3 class="stats-value">
-          {{ totalStock() }}
+          {{ onSaleProducts() }}
         </h3>
-        <p class="stats-label">Total Stock</p>
+        <p class="stats-label">Total On Sale</p>
       </div>
     </div>
   </div>
@@ -266,12 +266,12 @@
                 <div class="product-image">
                   <img
                     [src]="product.image"
-                    [alt]="product.name"
+                    [alt]="product.slug"
                     class="product-img"
                   />
                 </div>
                 <div class="product-details">
-                  <span class="product-name">{{ product.name }}</span>
+                  <span class="product-name">{{ product.title }}</span>
                   <span class="product-id">{{ product.id }}</span>
                 </div>
               </div>
@@ -282,17 +282,17 @@
             <td class="price-cell">
               <span class="price">{{ formatPrice(product.price) }}</span>
             </td>
-            <td class="stock-cell">
+            <!-- <td class="stock-cell">
               <span class="stock-badge" [class]="getStockClass(product.stock)">
                 {{ product.stock }}
               </span>
-            </td>
+            </td> -->
             <td class="status-cell">
               <span
                 class="status-badge"
-                [class]="getStatusClass(product.status)"
+                [class]="getStatusClass(product.isVisible)"
               >
-                {{ product.status }}
+                {{ product.isVisible }}
               </span>
             </td>
             <td class="date-cell">
@@ -435,7 +435,7 @@
           <div class="image-preview">
             <img
               [src]="editingProduct()?.image"
-              [alt]="editingProduct()?.name"
+              [alt]="editingProduct()?.slug"
               class="preview-img"
             />
             <div class="image-overlay">

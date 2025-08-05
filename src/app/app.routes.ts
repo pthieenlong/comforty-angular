@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Home, Login, Register, Product, ProductDetail, Cart } from 'features';
+import { Home, Login, Register, Product, ProductDetail, Cart, Checkout } from 'features';
 import {
   AddProduct,
   Admin,
@@ -8,7 +8,11 @@ import {
   Products,
   Users,
 } from 'features/admin';
+import {
+  User
+} from 'features/user';
 import { adminGuard } from 'features/admin/service/admin-auth.guard';
+import { authGuard } from 'features/authenticate/guard/auth-guard';
 
 export const routes: Routes = [
   {
@@ -34,6 +38,15 @@ export const routes: Routes = [
   {
     path: 'cart',
     component: Cart,
+  },
+  {
+    path: 'checkout',
+    component: Checkout,
+  },
+  {
+    path: 'user',
+    component: User,
+    canActivate: [authGuard],
   },
   {
     path: 'admin',

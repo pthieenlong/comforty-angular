@@ -1,18 +1,20 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { API_URL } from 'types/const';
 
 interface Product {
   id: string;
-  name: string;
+  slug: string;
+  title: string;
+  image: string;
   category: string;
   price: number;
-  stock: number;
-  status: 'active' | 'inactive' | 'out-of-stock';
-  image: string;
-  description: string;
+  isSale: boolean;
+  salePercent: number;
+  isVisible: boolean;
   createdAt: string;
-  updatedAt: string;
 }
 
 interface Category {
@@ -54,80 +56,6 @@ export class Products implements OnInit {
 
   // Products data
   products = signal<Product[]>([
-    {
-      id: 'PROD-001',
-      name: 'Ergonomic Office Chair',
-      category: 'Furniture',
-      price: 299.99,
-      stock: 45,
-      status: 'active',
-      image: 'assets/images/all-img/product1.png',
-      description:
-        'Comfortable ergonomic office chair with adjustable features',
-      createdAt: '2024-01-15',
-      updatedAt: '2024-01-20',
-    },
-    {
-      id: 'PROD-002',
-      name: 'Wireless Bluetooth Headphones',
-      category: 'Electronics',
-      price: 149.99,
-      stock: 0,
-      status: 'out-of-stock',
-      image: 'assets/images/all-img/product2.png',
-      description: 'High-quality wireless headphones with noise cancellation',
-      createdAt: '2024-01-10',
-      updatedAt: '2024-01-18',
-    },
-    {
-      id: 'PROD-003',
-      name: 'Smart Fitness Watch',
-      category: 'Electronics',
-      price: 199.99,
-      stock: 23,
-      status: 'active',
-      image: 'assets/images/all-img/product3.png',
-      description:
-        'Advanced fitness tracking smartwatch with health monitoring',
-      createdAt: '2024-01-08',
-      updatedAt: '2024-01-15',
-    },
-    {
-      id: 'PROD-004',
-      name: 'Coffee Maker Pro',
-      category: 'Home & Kitchen',
-      price: 89.99,
-      stock: 67,
-      status: 'active',
-      image: 'assets/images/all-img/product1.png',
-      description: 'Professional coffee maker with programmable features',
-      createdAt: '2024-01-12',
-      updatedAt: '2024-01-16',
-    },
-    {
-      id: 'PROD-005',
-      name: 'Gaming Laptop',
-      category: 'Electronics',
-      price: 1299.99,
-      stock: 8,
-      status: 'active',
-      image: 'assets/images/all-img/product2.png',
-      description: 'High-performance gaming laptop with RTX graphics',
-      createdAt: '2024-01-05',
-      updatedAt: '2024-01-14',
-    },
-    {
-      id: 'PROD-006',
-      name: 'Yoga Mat Premium',
-      category: 'Sports',
-      price: 49.99,
-      stock: 0,
-      status: 'inactive',
-      image: 'assets/images/all-img/product3.png',
-      description: 'Premium non-slip yoga mat for professional use',
-      createdAt: '2024-01-03',
-      updatedAt: '2024-01-10',
-    },
   ]);
 
   categories = signal<Category[]>([
@@ -137,8 +65,6 @@ export class Products implements OnInit {
     { id: 'home-kitchen', name: 'Home & Kitchen', count: 1 },
     { id: 'sports', name: 'Sports', count: 1 },
   ]);
-
-  // Available categories for form
   availableCategories = signal([
     { value: 'Electronics', label: 'Electronics' },
     { value: 'Furniture', label: 'Furniture' },
@@ -148,19 +74,29 @@ export class Products implements OnInit {
     { value: 'Books', label: 'Books' },
   ]);
 
+  totalProducts = signal(0);
+
+  constructor(private httpClient: HttpClient) {
+    this.httpClient.get(`${API_URL}/product`).subscribe({
+      next: (res:any) => {
+        if(res.success) {
+          this.products.set(res.data)
+          this.totalProducts.set(res.pagination.totalItems)
+        }
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    });
+  }
   // Computed properties for stats
-  totalProducts = computed(() => this.products().length);
 
   activeProducts = computed(
-    () => this.products().filter((p) => p.status === 'active').length
+    () => this.products().filter((p) => p.isVisible == true).length
   );
 
-  outOfStockProducts = computed(
-    () => this.products().filter((p) => p.stock === 0).length
-  );
-
-  totalStock = computed(() =>
-    this.products().reduce((sum, p) => sum + p.stock, 0)
+  onSaleProducts = computed(
+    () => this.products().filter((p) => p.isSale == true).length
   );
 
   // Computed properties
@@ -175,14 +111,14 @@ export class Products implements OnInit {
   // Modal methods
   openEditModal(product: Product): void {
     this.editingProduct.set(product);
-    this.editForm.set({
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      stock: product.stock,
-      status: product.status,
-      description: product.description,
-    });
+    // this.editForm.set({
+    //   title: product.title,
+    //   category: product.category,
+    //   price: product.price,
+    //   stock: product.stock,
+    //   status: product.status,
+    //   description: product.description,
+    // });
     this.showEditModal.set(true);
   }
 
@@ -241,8 +177,7 @@ export class Products implements OnInit {
       const query = this.searchQuery().toLowerCase();
       filtered = filtered.filter(
         (product) =>
-          product.name.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
+          product.title.toLowerCase().includes(query) ||
           product.id.toLowerCase().includes(query)
       );
     }
@@ -257,11 +192,11 @@ export class Products implements OnInit {
     }
 
     // Status filter
-    if (this.selectedStatus() !== 'all') {
-      filtered = filtered.filter(
-        (product) => product.status === this.selectedStatus()
-      );
-    }
+    // if (this.selectedStatus() !== 'all') {
+    //   filtered = filtered.filter(
+    //     (product) => product.isVisible === this.selectedStatus()
+    //   );
+    // }
 
     this.filteredProducts.set(filtered);
     this.totalItems.set(filtered.length);
@@ -342,7 +277,7 @@ export class Products implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+    if (confirm(`Are you sure you want to delete "${product.title}"?`)) {
       this.products.update((products) =>
         products.filter((p) => p.id !== product.id)
       );
@@ -351,27 +286,17 @@ export class Products implements OnInit {
   }
 
   toggleProductStatus(product: Product): void {
-    const newStatus = product.status === 'active' ? 'inactive' : 'active';
     this.products.update((products) =>
       products.map((p) =>
-        p.id === product.id ? { ...p, status: newStatus } : p
+        p.id === product.id ? { ...p, isVisible: !product.isVisible } : p
       )
     );
     this.updateFilteredProducts();
   }
 
   // Utility methods
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'active':
-        return 'status-active';
-      case 'inactive':
-        return 'status-inactive';
-      case 'out-of-stock':
-        return 'status-out-of-stock';
-      default:
-        return 'status-active';
-    }
+  getStatusClass(isVisible: boolean): string {
+    return isVisible ? 'status-active' : 'status-inactive';
   }
 
   getStockClass(stock: number): string {

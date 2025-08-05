@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 interface User {
   id: string;
@@ -77,6 +78,8 @@ export class Users implements OnInit {
     { value: 'inactive', label: 'Inactive' },
     { value: 'suspended', label: 'Suspended' },
   ];
+
+  constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -157,7 +160,6 @@ export class Users implements OnInit {
         totalSpent: 2100.0,
       },
     ];
-
     this.users.set(mockUsers);
     this.filteredUsers.set(mockUsers);
   }

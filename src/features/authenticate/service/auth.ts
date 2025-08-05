@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { CartService } from 'features/cart/cart.service';
 
 @Injectable({
   providedIn: 'root',
@@ -6,9 +7,10 @@ import { Injectable, signal, computed } from '@angular/core';
 export class AuthService {
   private _isLogined = signal<boolean>(this.getStoredLoginState());
   private _user = signal<any>(this.getStoredUser());
-
   readonly isLogined = computed(() => this._isLogined());
   readonly user = computed(() => this._user());
+
+
   readonly isAdmin = computed(() => {
     const user = this._user();
     return user?.roles?.[0] === 'ADMIN';
@@ -63,11 +65,10 @@ export class AuthService {
     // Clear localStorage
     this.setStoredLoginState(false);
     this.setStoredUser(null);
-
-    // Clear localStorage completely
     try {
       localStorage.removeItem('isLogined');
       localStorage.removeItem('user');
+      localStorage.removeItem('guest_cart');
     } catch (error) {
       console.error('Error clearing localStorage:', error);
     }
