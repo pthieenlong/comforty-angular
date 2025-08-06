@@ -96,8 +96,8 @@
           (change)="onStatusChange()"
         >
           <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="active">On sale</option>
+          <option value="inactive">Active</option>
           <option value="out-of-stock">Out of Stock</option>
         </select>
       </div>
@@ -253,8 +253,8 @@
             <th>Product</th>
             <th>Category</th>
             <th>Price</th>
-            <th>Stock</th>
             <th>Status</th>
+            <th>On Sale</th>
             <th>Created</th>
             <th>Actions</th>
           </tr>
@@ -277,22 +277,23 @@
               </div>
             </td>
             <td class="category-cell">
-              <span class="category-badge">{{ product.category }}</span>
+              <span class="category-badge">{{ product.categories[0] }}</span>
             </td>
             <td class="price-cell">
-              <span class="price">{{ formatPrice(product.price) }}</span>
+              <span class="price">{{ moneyFormat(product.price) }}</span>
             </td>
-            <!-- <td class="stock-cell">
-              <span class="stock-badge" [class]="getStockClass(product.stock)">
-                {{ product.stock }}
-              </span>
-            </td> -->
+
             <td class="status-cell">
               <span
                 class="status-badge"
                 [class]="getStatusClass(product.isVisible)"
               >
-                {{ product.isVisible }}
+                {{ product.isVisible ? "Tồn tại" : "Ngưng bán" }}
+              </span>
+            </td>
+            <td class="stock-cell">
+              <span class="stock-badge">
+                {{ product.isSale ? product.salePercent : "Không" }}
               </span>
             </td>
             <td class="date-cell">

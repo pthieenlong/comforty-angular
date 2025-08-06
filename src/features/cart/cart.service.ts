@@ -181,7 +181,6 @@ export class CartService {
       .get(`${API_URL}/cart/${this.auth.getUser()?.username}`)
       .subscribe({
         next: (res: any) => {
-          console.log('Cart from server:', res.data); 
           this._cart.set(res.data.items);
         },
         error: (error) => {

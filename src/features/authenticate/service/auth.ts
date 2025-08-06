@@ -10,7 +10,6 @@ export class AuthService {
   readonly isLogined = computed(() => this._isLogined());
   readonly user = computed(() => this._user());
 
-
   readonly isAdmin = computed(() => {
     const user = this._user();
     return user?.roles?.[0] === 'ADMIN';
@@ -50,7 +49,6 @@ export class AuthService {
   }
 
   login(user: any) {
-    console.log('AuthService.login called with:', user);
     this._isLogined.set(true);
     this._user.set(user);
 

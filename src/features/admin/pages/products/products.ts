@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ interface Product {
   slug: string;
   title: string;
   image: string;
-  category: string;
+  categories: string[];
   price: number;
   isSale: boolean;
   salePercent: number;
@@ -22,7 +22,17 @@ interface Category {
   name: string;
   count: number;
 }
-
+interface UpdateProductDTO {
+  title?: string;
+  price?: number;
+  categories?: string[];
+  images?: string[];
+  isSale?: boolean;
+  isVisible?: boolean;
+  salePercent?: number;
+  shortDesc?: string;
+  longDesc?: string;
+}
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -30,7 +40,7 @@ interface Category {
   templateUrl: './products.html',
   styleUrls: ['./products.css'],
 })
-export class Products implements OnInit {
+export class Products {
   // Search and filter
   searchQuery = signal('');
   selectedCategory = signal('all');
@@ -39,24 +49,26 @@ export class Products implements OnInit {
 
   // Pagination
   currentPage = signal(1);
-  itemsPerPage = signal(10);
+  itemsPerPage = signal(12);
   totalItems = signal(0);
 
   // Modal state
   showEditModal = signal(false);
   editingProduct = signal<Product | null>(null);
   editForm = signal({
-    name: '',
-    category: '',
+    title: '',
+    categories: [] as string[],
     price: 0,
-    stock: 0,
-    status: 'active' as 'active' | 'inactive' | 'out-of-stock',
-    description: '',
+    image: '',
+    isSale: false,
+    isVisible: true,
+    salePercent: 0,
+    shortDesc: '',
+    longDesc: '',
   });
 
   // Products data
-  products = signal<Product[]>([
-  ]);
+  products = signal<Product[]>([]);
 
   categories = signal<Category[]>([
     { id: 'all', name: 'All Categories', count: 6 },
@@ -77,19 +89,30 @@ export class Products implements OnInit {
   totalProducts = signal(0);
 
   constructor(private httpClient: HttpClient) {
+    effect(() => {
+      if (this.products().length > 0) {
+        this.updateFilteredProducts();
+      }
+    });
+
+    effect(() => {
+      if (this.filteredProducts().length > 0) {
+        this.updatePagination();
+      }
+    });
+
     this.httpClient.get(`${API_URL}/product`).subscribe({
-      next: (res:any) => {
-        if(res.success) {
-          this.products.set(res.data)
-          this.totalProducts.set(res.pagination.totalItems)
+      next: (res: any) => {
+        if (res.success) {
+          this.products.set(res.data);
+          this.totalProducts.set(res.data.length);
         }
       },
       error: (error) => {
-        console.log(error)
-      }
+        console.log(error);
+      },
     });
   }
-  // Computed properties for stats
 
   activeProducts = computed(
     () => this.products().filter((p) => p.isVisible == true).length
@@ -99,26 +122,25 @@ export class Products implements OnInit {
     () => this.products().filter((p) => p.isSale == true).length
   );
 
-  // Computed properties
   filteredProducts = signal<Product[]>([]);
   paginatedProducts = signal<Product[]>([]);
 
-  ngOnInit(): void {
-    this.updateFilteredProducts();
-    this.updatePagination();
-  }
-
-  // Modal methods
   openEditModal(product: Product): void {
     this.editingProduct.set(product);
-    // this.editForm.set({
-    //   title: product.title,
-    //   category: product.category,
-    //   price: product.price,
-    //   stock: product.stock,
-    //   status: product.status,
-    //   description: product.description,
-    // });
+
+    // Populate form với dữ liệu hiện tại của sản phẩm
+    this.editForm.set({
+      title: product.title,
+      categories: [...product.categories], // Copy array để tránh reference
+      price: product.price,
+      image: product.image, // Sử dụng image string
+      isSale: product.isSale,
+      isVisible: product.isVisible,
+      salePercent: product.salePercent,
+      shortDesc: product.shortDesc || '',
+      longDesc: product.longDesc || '',
+    });
+
     this.showEditModal.set(true);
   }
 
@@ -143,7 +165,6 @@ export class Products implements OnInit {
     const product = this.editingProduct();
     if (!product) return;
 
-    // Update the product
     this.products.update((products) =>
       products.map((p) =>
         p.id === product.id
@@ -168,11 +189,9 @@ export class Products implements OnInit {
     this.closeEditModal();
   }
 
-  // Filter and search methods
   updateFilteredProducts(): void {
     let filtered = this.products();
 
-    // Search filter
     if (this.searchQuery()) {
       const query = this.searchQuery().toLowerCase();
       filtered = filtered.filter(
@@ -182,32 +201,29 @@ export class Products implements OnInit {
       );
     }
 
-    // Category filter
     if (this.selectedCategory() !== 'all') {
       filtered = filtered.filter(
         (product) =>
-          product.category.toLowerCase().replace(/\s+/g, '-') ===
+          product.categories[0].toLowerCase().replace(/\s+/g, '-') ===
           this.selectedCategory()
       );
     }
 
-    // Status filter
-    // if (this.selectedStatus() !== 'all') {
-    //   filtered = filtered.filter(
-    //     (product) => product.isVisible === this.selectedStatus()
-    //   );
-    // }
-
     this.filteredProducts.set(filtered);
     this.totalItems.set(filtered.length);
-    this.currentPage.set(1);
-    this.updatePagination();
+
+    const totalPages = Math.ceil(filtered.length / this.itemsPerPage());
+    if (this.currentPage() > totalPages) {
+      this.currentPage.set(1);
+    }
   }
 
   updatePagination(): void {
     const startIndex = (this.currentPage() - 1) * this.itemsPerPage();
     const endIndex = startIndex + this.itemsPerPage();
+
     const paginated = this.filteredProducts().slice(startIndex, endIndex);
+
     this.paginatedProducts.set(paginated);
   }
 
@@ -263,11 +279,11 @@ export class Products implements OnInit {
 
     return pages;
   }
-
   goToPage(page: number): void {
+    console.log('goToPage called with page:', page);
+
     if (page > 0 && page <= this.getTotalPages()) {
       this.currentPage.set(page);
-      this.updatePagination();
     }
   }
 
@@ -291,6 +307,18 @@ export class Products implements OnInit {
         p.id === product.id ? { ...p, isVisible: !product.isVisible } : p
       )
     );
+
+    this.httpClient
+      .patch(`${API_URL}/product/sale/${product.slug}`, {})
+      .subscribe({
+        next: (res: any) => {
+          console.log(res);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+
     this.updateFilteredProducts();
   }
 
@@ -299,14 +327,8 @@ export class Products implements OnInit {
     return isVisible ? 'status-active' : 'status-inactive';
   }
 
-  getStockClass(stock: number): string {
-    if (stock === 0) return 'stock-empty';
-    if (stock < 10) return 'stock-low';
-    return 'stock-ok';
-  }
-
-  formatPrice(price: number): string {
-    return `$${price.toFixed(2)}`;
+  public moneyFormat(price: number) {
+    return `${new Intl.NumberFormat('vi-VN').format(price)}đ`;
   }
 
   formatDate(date: string): string {
